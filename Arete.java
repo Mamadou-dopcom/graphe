@@ -1,6 +1,7 @@
 package Structure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -45,10 +46,26 @@ class Arete {
  // Renvoie le poind d'une arete
  public int getPoids() { 
 	 return poids; }
+public Sommet[] getExtremites() {
+	return extremites;
+}
+public void setExtremites(Sommet[] extremites) {
+	this.extremites = extremites;
+}
+public void setPoids(int poids) {
+	this.poids = poids;
+}
+@Override
+public String toString() {
+	return "Arete: [[" + extremites[0].getNom() + ","+extremites[1].getNom()+ "] poids=" + poids + "]";
+}
 
+//public boolean estArete(Sommet s1, Sommet s2) {
+	//if (!(admetExtremite(s1) && admetExtremite(s2)) ||  );
+		
+	//}
 
-
-
+//public boolean verif()
 
 
 }

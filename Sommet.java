@@ -91,5 +91,60 @@ class Sommet {
 	    return s;
 	}
  }
+
+public String getNom() {
+	return nom;
+}
+
+public void setNom(String nom) {
+	this.nom = nom;
+}
+
+public Graphe getGraphe() {
+	return graphe;
+}
+
+public void setGraphe(Graphe graphe) {
+	this.graphe = graphe;
+}
+
+public Sommet getDominant() {
+	return dominant;
+}
+
+public void setDominant(Sommet dominant) {
+	this.dominant = dominant;
+}
+
+public int getRang() {
+	return rang;
+}
+
+public void setRang(int rang) {
+	this.rang = rang;
+}
+
+public Set<Arete> getIncidences() {
+	return incidences;
+}
+
+public void setIncidences(Set<Arete> incidences) {
+	this.incidences = incidences;
+}
+
+public Map<Sommet, Chemin> getAccessibles() {
+	return accessibles;
+}
+
+public void setAccessibles(Map<Sommet, Chemin> accessibles) {
+	this.accessibles = accessibles;
+}
+
+@Override
+public String toString() {
+	return "Sommet [nom=" + this.getNom() + "]";
+}
+ 
+
  
 }

@@ -1,8 +1,10 @@
 package Structure;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.HashMap;
 
 class Graphe {
@@ -36,31 +38,25 @@ class Graphe {
     }
 
     // Ajout d'une ar�te entre deux sommets [s1] et [s2]
+    
     public void ajouteArete(Sommet s1, Sommet s2) {
-		int poids = this.getRandoNumber(1,1000);
-		Arete a = new Arete(s1, s2, point)
-		aretes.add(a);
-		// On r�cup�re les composantes des deux sommets reli�s...
-		Sommet sc1 = s1.composante();
-		Sommet sc2 = s2.composante();
-		// ... si elles �taient diff�rentes, alors on les unit.
-		if (sc1 != sc2) {
-			nbComposantes--;
-			composantes.remove(sc1);
-			composantes.remove(sc2);
-			composantes.add(sc1.union(sc2));
-		}
+		int poids = this.getRandomNumber(1,1000);
+			
+			Arete a = new Arete(s1, s2, poids);
+			aretes.add(a);
+			// On r�cup�re les composantes des deux sommets reli�s...
+			Sommet sc1 = s1.composante();
+			Sommet sc2 = s2.composante();
+			// ... si elles �taient diff�rentes, alors on les unit.
+			if (sc1 != sc2) {
+				nbComposantes--;
+				composantes.remove(sc1);
+				composantes.remove(sc2);
+				composantes.add(sc1.union(sc2));
+			}
     }
 
-    // Prend les sommets dans l'ordre, affecte � chacun la plus petite couleur
-    // disponible, et renvoie la couleur maximale utilis�e.
-    public int colorie() {
-	int couleurMax = 0;
-	for(Sommet s : sommets) {
-	    couleurMax = Math.max(couleurMax, s.colorie());
-		}
-	return couleurMax;
-    }
+  
 
 	//Prend en entré un nombre min et un nombre max et renvoie un nombre aleatoire dans l'interval
 	public int getRandomNumber(int min, int max) {
@@ -79,4 +75,53 @@ class Graphe {
 	return randomNum;
 	}
 
+	public Set<Sommet> getSommets() {
+		return sommets;
+	}
+
+	public void setSommets(Set<Sommet> sommets) {
+		this.sommets = sommets;
+	}
+
+	public Set<Arete> getAretes() {
+		return aretes;
+	}
+
+	public void setAretes(Set<Arete> aretes) {
+		this.aretes = aretes;
+	}
+
+	public Set<Sommet> getComposantes() {
+		return composantes;
+	}
+
+	public void setComposantes(Set<Sommet> composantes) {
+		this.composantes = composantes;
+	}
+
+	public int getNbComposantes() {
+		return nbComposantes;
+	}
+
+	public void setNbComposantes(int nbComposantes) {
+		this.nbComposantes = nbComposantes;
+	}
+
+	public void afficheArete() {
+		for(Arete a : this.getAretes())
+			System.out.println( a.toString());
+			//System.out.println("test");
+	}
+	
+	public void afficheSommet() {
+		for(Sommet s : this.getSommets())
+			System.out.println( s.toString());
+	}
+	
+
+
+	
+	
+
+	
 }
