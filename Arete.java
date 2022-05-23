@@ -6,61 +6,49 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
-//Une arête a deux extrémités (ordre arbitraire, on regarde des graphes
-//non orientés).
+//Une arï¿½te a deux extrï¿½mitï¿½s (ordre arbitraire, on regarde des graphes
+//non orientï¿½s).
 //On peut :
-//- Savoir si un sommet est une extrémité
-//- Obtenir l'autre extrémité si on en a déjà une
-//- Obtenir le poids de l'arête (par défaut, 1)
+//- Savoir si un sommet est une extrï¿½mitï¿½
+//- Obtenir l'autre extrï¿½mitï¿½ si on en a dï¿½jï¿½ une
+//- Obtenir le poids de l'arï¿½te (par dï¿½faut, 1)
 class Arete {
- // On représente les extrémités par un tableau à deux cases
- // Comme souvent ici : c'est une possibilité parmi d'autres
+ // On reprï¿½sente les extrï¿½mitï¿½s par un tableau ï¿½ deux cases
+ // Comme souvent ici : c'est une possibilitï¿½ parmi d'autres
  private Sommet[] extremites;
 
- public Arete(Sommet s1, Sommet s2) {
-	// On range les extrémité dans l'ordre donné par les paramètres
+ private int poids;
+
+ public Arete(Sommet s1, Sommet s2, int p) {
+	// On range les extrï¿½mitï¿½ dans l'ordre donnï¿½ par les paramï¿½tres
 	// Variante : on les classe en fonction d'un ordre (pas utile ici)
 	extremites = new Sommet[2];
 	extremites[0] = s1;
 	extremites[1] = s2;
-	// On inscrit l'arête dans les listes d'incidence de ses extrémités
+	// On inscrit l'arï¿½te dans les listes d'incidence de ses extrï¿½mitï¿½s
 	s1.ajouteArete(this);
 	s2.ajouteArete(this);
+	poids = p;
  }
-
- // Donne l'autre extrémité
- // Pré-condition : [s] est l'une des extrémités
+ // Donne l'autre extrï¿½mitï¿½
+ // Prï¿½-condition : [s] est l'une des extrï¿½mitï¿½s
  public Sommet autreExtremite(Sommet s) {
 	if (s == extremites[0]) return extremites[1];
 	else return extremites[0];  
  }
 
- // Vérifie qu'un sommet est une extrémité
+ // Vï¿½rifie qu'un sommet est une extrï¿½mitï¿½
  public boolean admetExtremite(Sommet s) {
 	return (s == extremites[0] || s == extremites[1]);
- }
+ 	}
 
- // Pour une arête non pondérée, le poids est 1
- public int getPoids() { return 1; }
+ // Renvoie le poind d'une arete
+ public int getPoids() { 
+	 return poids; }
+
+
+
+
+
+
 }
-
-//Une arête pondérée est une arête avec en plus un poids.
-class AretePonderee extends Arete {
- private int poids;
-
- public AretePonderee(Sommet s1, Sommet s2, int p) {
-	super(s1, s2);
-	poids = p;
- }
-
- public int getPoids() { return poids; }
-}
-
-
-//Un chemin est un ensemble d'arêtes entre une source et une destination
-//On peut :
-//- Créer un chemin vide
-//- Obtenir la longueur du chemin
-//- Ajouter une arête compatible à la fin du chemin
-//- Concaténer un chemin à la fin du chemin
-//- Obtenir le chemin inverse

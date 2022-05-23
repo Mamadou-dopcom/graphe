@@ -6,19 +6,19 @@ import java.util.Map;
 import java.util.HashMap;
 
 class Graphe {
-    // Ensembles de sommets et d'arêtes, directement représentés comme tels.
+    // Ensembles de sommets et d'arï¿½tes, directement reprï¿½sentï¿½s comme tels.
     private Set<Sommet> sommets;
     private Set<Arete> aretes;
-    // Une composante connexe est représentée par un sommet principal
-    // Idée : utiliser l'algorithme Union-Find de Tarjan (dans ce corrigé,
+    // Une composante connexe est reprï¿½sentï¿½e par un sommet principal
+    // Idï¿½e : utiliser l'algorithme Union-Find de Tarjan (dans ce corrigï¿½,
     // il y a au passage les optimisations "union par rangs" et "compression
     // de chemins".
     private Set<Sommet> composantes;
-    // Le nombre de composantes pourrait être recalculé à la demande plutôt
-    // qu'enregistré, mais ça ne coûte pas cher.
+    // Le nombre de composantes pourrait ï¿½tre recalculï¿½ ï¿½ la demande plutï¿½t
+    // qu'enregistrï¿½, mais ï¿½a ne coï¿½te pas cher.
     private int nbComposantes;
 
-    // Graphe vide : pas de sommets, pas d'arêtes, pas de composantes.
+    // Graphe vide : pas de sommets, pas d'arï¿½tes, pas de composantes.
     public Graphe() {
 	sommets = new HashSet<Sommet>();
 	aretes = new HashSet<Arete>();
@@ -30,45 +30,53 @@ class Graphe {
     public void ajouteSommet(String n) {
 	Sommet s = new Sommet(this, n);
 	sommets.add(s);
-	// Un nouveau sommet crée une nouvelle composante
+	// Un nouveau sommet crï¿½e une nouvelle composante
 	composantes.add(s);
 	nbComposantes++;
     }
 
-    // Ajout d'une arête entre deux sommets [s1] et [s2]
+    // Ajout d'une arï¿½te entre deux sommets [s1] et [s2]
     public void ajouteArete(Sommet s1, Sommet s2) {
-	Arete a = new Arete(s1, s2);
-	aretes.add(a);
-	// On récupère les composantes des deux sommets reliés...
-	Sommet sc1 = s1.composante();
-	Sommet sc2 = s2.composante();
-	// ... si elles étaient différentes, alors on les unit.
-	if (sc1 != sc2) {
-	    nbComposantes--;
-	    composantes.remove(sc1);
-	    composantes.remove(sc2);
-	    composantes.add(sc1.union(sc2));
-	}
+		int poids = this.getRandoNumber(1,1000);
+		Arete a = new Arete(s1, s2, point)
+		aretes.add(a);
+		// On rï¿½cupï¿½re les composantes des deux sommets reliï¿½s...
+		Sommet sc1 = s1.composante();
+		Sommet sc2 = s2.composante();
+		// ... si elles ï¿½taient diffï¿½rentes, alors on les unit.
+		if (sc1 != sc2) {
+			nbComposantes--;
+			composantes.remove(sc1);
+			composantes.remove(sc2);
+			composantes.add(sc1.union(sc2));
+		}
     }
 
-    // Vérifie que tous deux sommets adjacents ont des couleurs différentes
-    public boolean bienColore() {
-	for(Sommet s : sommets) {
-	    if (!s.bienColore()) return false;
-	}
-	return true;
-    }
-
-    // Prend les sommets dans l'ordre, affecte à chacun la plus petite couleur
-    // disponible, et renvoie la couleur maximale utilisée.
+    // Prend les sommets dans l'ordre, affecte ï¿½ chacun la plus petite couleur
+    // disponible, et renvoie la couleur maximale utilisï¿½e.
     public int colorie() {
 	int couleurMax = 0;
 	for(Sommet s : sommets) {
 	    couleurMax = Math.max(couleurMax, s.colorie());
-	}
+		}
 	return couleurMax;
     }
 
+	//Prend en entrÃ© un nombre min et un nombre max et renvoie un nombre aleatoire dans l'interval
+	public int getRandomNumber(int min, int max) {
+		return (int) ((Math.random() * (max - min)+1) + min);
+		}
+	
+	//Prend en entrÃ© un nombre min et un nombre max et l'exception renvoie un nombre aleatoire dans l'interval qui est different de l'exception 
+	public int RandomNumberRange(int max, int min, int block){
+	Random rand = new Random();
+	int randomNum;
+
+	do {
+		randomNum = rand.nextInt((max - min) + 1) + min;
+	} while (randomNum == block && (max != block && block != min));
+
+	return randomNum;
+	}
+
 }
-
-

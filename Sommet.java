@@ -5,85 +5,69 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
-//Un sommet possède un nom et une couleur.
+//Un sommet possï¿½de un nom et une couleur.
 //On peut :
-//- Créer un sommet
-//- Lui ajouter des arêtes incidentes
+//- Crï¿½er un sommet
+//- Lui ajouter des arï¿½tes incidentes
 //- Obtenir sa composante connexe
 //- Lui donner une couleur
-//Ici, les sommets représentent aussi des composantes connexes, on
+//Ici, les sommets reprï¿½sentent aussi des composantes connexes, on
 //peut donc encore :
 //- Unir la composante d'un sommet avec celle d'un autre sommet
 class Sommet {
  private String nom;
- private int couleur;
- // Je croyais que j'avais besoin de cet attribut mais à l'heure
- // actuelle il n'est pas utilisé...
+
+ // Je croyais que j'avais besoin de cet attribut mais ï¿½ l'heure
+ // actuelle il n'est pas utilisï¿½...
  private Graphe graphe;
- // Le dominant est le père du sommet considéré dans la structure Union-Find
+ // Le dominant est le pï¿½re du sommet considï¿½rï¿½ dans la structure Union-Find
  private Sommet dominant;
  // Le rang est une borne sur la hauteur de la structure Union-Find
  private int rang=0;
- // Ensemble des arêtes incidentes
+ // Ensemble des arï¿½tes incidentes
  private Set<Arete> incidences;
- // Les sommets accessibles sont représentés par une table associant
- // chaque sommet accessible à un chemin.
- // On veut que le chemin mémorisé soit le plus court.
- // On pourrait obtenir une représentation plus compacte en mémorisant
- // moins d'information : pour les besoins des méthodes du TP il suffirait
- // d'avoir la longueur du chemin et sa première arête.
+ // Les sommets accessibles sont reprï¿½sentï¿½s par une table associant
+ // chaque sommet accessible ï¿½ un chemin.
+ // On veut que le chemin mï¿½morisï¿½ soit le plus court.
+ // On pourrait obtenir une reprï¿½sentation plus compacte en mï¿½morisant
+ // moins d'information : pour les besoins des mï¿½thodes du TP il suffirait
+ // d'avoir la longueur du chemin et sa premiï¿½re arï¿½te.
  private Map<Sommet, Chemin> accessibles;
  
  public Sommet(Graphe g, String n) {
 	graphe = g;
 	nom = n;
 	dominant = this;
-	// Un sommet est créé sans arêtes incidentes.
-	// Le seul sommet accessible est lui-même, via le chemin vide.
+	// Un sommet est crï¿½ï¿½ sans arï¿½tes incidentes.
+	// Le seul sommet accessible est lui-mï¿½me, via le chemin vide.
 	incidences = new HashSet<Arete>();
 	accessibles = new HashMap<Sommet, Chemin>();
 	accessibles.put(this, new Chemin(this));
  }
 
- // Ajout d'une arête incidente.
- // Pour mettre à jour l'ensemble des sommets accessible dans le graphe,
+ // Ajout d'une arï¿½te incidente.
+ // Pour mettre ï¿½ jour l'ensemble des sommets accessible dans le graphe,
  // il faut prendre tous les sommets accessibles depuis le sommet actuel,
  // tous les sommets accessibles depuis le sommet cible, et comparer le
- // nouveau chemin créé avec le meilleur chemin qui existait déjà.
+ // nouveau chemin crï¿½ï¿½ avec le meilleur chemin qui existait dï¿½jï¿½.
  public void ajouteArete(Arete a) {
 	incidences.add(a);
 	for(Map.Entry<Sommet, Chemin> accS1 : this.accessibles.entrySet()) {
 	    for(Map.Entry<Sommet, Chemin> accS2 :
 		    a.autreExtremite(this).accessibles.entrySet()) {
-		// À compléter...
-		// On construit le nouveau chemin entre deux extrémités,
-		// on le compare à l'éventuel chemin déjà existant, et on
+		// ï¿½ complï¿½ter...
+		// On construit le nouveau chemin entre deux extrï¿½mitï¿½s,
+		// on le compare ï¿½ l'ï¿½ventuel chemin dï¿½jï¿½ existant, et on
 		// garde le plus court.
 	    }
 	}
  }
-
- // Un sommet est bien coloré s'il n'a pas la même couleur que ses voisins.
- public boolean bienColore() {
-	for (Arete a : incidences) {
-	    if (a.autreExtremite(this).couleur == this.couleur) return false;
-	}
-	return true;
- }
-
- // Affecte à un sommet la plus petite couleur pas déjà prise par ses
- // voisins.
- public int colorie() {
-	this.couleur = 0;
-	while (!this.bienColore()) this.couleur++;
-	return this.couleur;
- }
  
- // Donne le sommet représentant la composante connexe à laquelle
+ // Donne le sommet reprï¿½sentant la composante connexe ï¿½ laquelle
  // appartient [this].
  public Sommet composante() {
 	if (dominant != this) {
-	    // Cette mise à jour correspond à l'optimisation
+	    // Cette mise ï¿½ jour correspond ï¿½ l'optimisation
 	    // "compression de chemins".
 	    dominant = dominant.composante();
 	}
@@ -91,13 +75,13 @@ class Sommet {
  }
 
  // Fait l'union de deux composantes connexes.
- // Pré-condition : [this] et [s] doivent être chacun le représentant
- // de sa composante connexe (c'est-à-dire la racine de l'arbre
+ // Prï¿½-condition : [this] et [s] doivent ï¿½tre chacun le reprï¿½sentant
+ // de sa composante connexe (c'est-ï¿½-dire la racine de l'arbre
  // correspondant dans la structure Union-Find), sans quoi la structure
- // de données serait corrompue.
- // Remarque : pas forcément malin de donner une pré-condition si critique
- // à une méthode qui n'est pas privée. Il serait plus raisonnable de
- // d'abord appliquer la méthode [composante()].
+ // de donnï¿½es serait corrompue.
+ // Remarque : pas forcï¿½ment malin de donner une prï¿½-condition si critique
+ // ï¿½ une mï¿½thode qui n'est pas privï¿½e. Il serait plus raisonnable de
+ // d'abord appliquer la mï¿½thode [composante()].
  protected Sommet union(Sommet s) {
  	if (this.rang > s.rang) {
 	    s.dominant = this; return this;
