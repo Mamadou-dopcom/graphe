@@ -1,5 +1,6 @@
 package Structure;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.HashSet;
@@ -8,52 +9,43 @@ import java.util.Random;
 import java.util.HashMap;
 
 class Graphe {
+	
+	
     // Ensembles de sommets et d'ar�tes, directement repr�sent�s comme tels.
-    private Set<Sommet> sommets;
-    private Set<Arete> aretes;
+    private ArrayList<Sommet> sommets;
+    private ArrayList<Arete> aretes;
+    ArrayList<Arete> resultat=new ArrayList<>();
     // Une composante connexe est repr�sent�e par un sommet principal
     // Id�e : utiliser l'algorithme Union-Find de Tarjan (dans ce corrig�,
     // il y a au passage les optimisations "union par rangs" et "compression
     // de chemins".
-    private Set<Sommet> composantes;
-    // Le nombre de composantes pourrait �tre recalcul� � la demande plut�t
-    // qu'enregistr�, mais �a ne co�te pas cher.
-    private int nbComposantes;
 
     // Graphe vide : pas de sommets, pas d'ar�tes, pas de composantes.
     public Graphe() {
-	sommets = new HashSet<Sommet>();
-	aretes = new HashSet<Arete>();
-	composantes = new HashSet<Sommet>();
-	nbComposantes = 0;
+	sommets = new ArrayList<Sommet>();
+	aretes = new ArrayList<Arete>();
+	
     }
 
     // Ajout d'un sommet de nom [n]
-    public void ajouteSommet(String n) {
+    public void ajouteSommet(int n) {
 	Sommet s = new Sommet(this, n);
 	sommets.add(s);
-	// Un nouveau sommet cr�e une nouvelle composante
-	composantes.add(s);
-	nbComposantes++;
     }
 
     // Ajout d'une ar�te entre deux sommets [s1] et [s2]
     
-    public void ajouteArete(Sommet s1, Sommet s2) {
+    public int ajouteArete(Sommet s1, Sommet s2) {
 		int poids = this.getRandomNumber(1,1000);
 			
 			Arete a = new Arete(s1, s2, poids);
-			aretes.add(a);
-			// On r�cup�re les composantes des deux sommets reli�s...
-			Sommet sc1 = s1.composante();
-			Sommet sc2 = s2.composante();
-			// ... si elles �taient diff�rentes, alors on les unit.
-			if (sc1 != sc2) {
-				nbComposantes--;
-				composantes.remove(sc1);
-				composantes.remove(sc2);
-				composantes.add(sc1.union(sc2));
+			if(this.AreteValid(a) == true) {
+				aretes.add(a);
+				sommets.add(s1);
+				sommets.add(s2);
+				return 1;
 			}
+		return 0;
     }
 
   
@@ -75,40 +67,25 @@ class Graphe {
 	return randomNum;
 	}
 
-	public Set<Sommet> getSommets() {
+	public ArrayList<Sommet> getSommets() {
 		return sommets;
 	}
 
-	public void setSommets(Set<Sommet> sommets) {
+	public void setSommets(ArrayList<Sommet> sommets) {
 		this.sommets = sommets;
 	}
 
-	public Set<Arete> getAretes() {
+	public ArrayList<Arete> getAretes() {
 		return aretes;
 	}
 
-	public void setAretes(Set<Arete> aretes) {
+	public void setAretes(ArrayList<Arete> aretes) {
 		this.aretes = aretes;
 	}
 
-	public Set<Sommet> getComposantes() {
-		return composantes;
-	}
-
-	public void setComposantes(Set<Sommet> composantes) {
-		this.composantes = composantes;
-	}
-
-	public int getNbComposantes() {
-		return nbComposantes;
-	}
-
-	public void setNbComposantes(int nbComposantes) {
-		this.nbComposantes = nbComposantes;
-	}
 
 	public void afficheArete() {
-		for(Arete a : this.getAretes())
+		for(Arete a : aretes)
 			System.out.println( a.toString());
 			//System.out.println("test");
 	}
@@ -118,10 +95,62 @@ class Graphe {
 			System.out.println( s.toString());
 	}
 	
-
-
+	public boolean AreteValid(Arete testarete) {
+		boolean test=true;
+		for(Arete a : aretes)
+			if (a.equales(testarete)==0 || a.equales(testarete)==1)
+				test=false;
+		return test;
+			//System.out.println("test");
+	}
 	
+	public void AfficheArete() {
+		for(Arete a : aretes)
+			if(a.getExtremites()[1].getNom()==a.getExtremites()[0].getNom()+1)
+				System.out.println( a.toString());
+			//System.out.println("test");
+	}
+
+	/**public void lireFichier(String nom) throws IOException {
+	    File fichier = new File(nom);
+	    Scanner lecteur = new Scanner(fichier);
+			
+	    while(lecteur.hasNextInt()) {
+		sommets.add(new Sommet(lecteur.nextInt(), lecteur.nextInt(), lecteur.nextInt()));
+	    }
+	}**/
 	
+	public void Kruskal(){
+		int k=0;
+		
+		long debut = System.currentTimeMillis();
+		
+	    UnionFind unionfind = new UnionFind();
+	    aretes.sort(Comparator.comparingInt(Arete::getPoids));
+	    //this.afficheArete();
+	    for(Sommet s : sommets) {
+            unionfind.makeSet(s.getNom());
+	    }
+	    unionfind.toString();
+	    while (k < sommets.size()-1) {
+	        for (int i = 0; i < aretes.size(); i++) {
+	            Arete arete = aretes.get(i);
+	            if (unionfind.Find(arete.getExtremites()[0].getNom()) != unionfind.Find(arete.getExtremites()[1].getNom())) {
+	                resultat.add(arete);
+	                System.out.println("fait");
+	                unionfind.Union(arete.getExtremites()[0].getNom(), arete.getExtremites()[1].getNom());
+	            }
+	        }
+	        k++;
+	    }
+	    System.out.println((System.currentTimeMillis()-debut) + " millisecondes");
+	    this.AfficheResult();
+	    }
+	
+	 public void AfficheResult() {
+		  for (Arete arete : resultat)
+		    	arete.toString();
+	  }	 
 
 	
 }

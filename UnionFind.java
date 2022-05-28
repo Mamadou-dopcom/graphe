@@ -1,38 +1,55 @@
 package Structure;
 
+import java.util.ArrayList;
 
 public class UnionFind {
-    private int[] parent;
-    public UnionFind(int n) {
-        parent = new int[n];
-        for (var i = 0; i < n; i++) {
-            parent[i] = i;
-        }
+	// Variable d'instance
+	ArrayList<Ensemble> parent = new ArrayList(); 
+	Ensemble ensemble ;
+		public void makeSet(int x) {
+			boolean exist=false;
+			for (Ensemble e : parent) {
+				if (e.representant==x)
+					exist = true;
+			}
+			if (!exist) {
+				ensemble = new Ensemble(x);
+				parent.add(ensemble);
+			//System.out.println(ensemble.representant);
+			}
+		}
+
+		
+    public Ensemble Find(int x) {
+		for (Ensemble ensemble : parent ) {
+			if (ensemble.representant != null && ensemble.representant==x)
+				return ensemble ;
+    	}
+		return null;
     }
 
-    public int Find(int x) {
-        if (x == parent[x]) {
-            return x;
-        }
-        // compress the paths
-        return parent[x] = Find(parent[x]);
-    }
+
 
     public void Union(int x, int y)  {
-        var px = Find(x);
-        var py = Find(y);
-        if (px != py) {
-            parent[px] = py;
-        }
+    	Ensemble  es1 = this.Find(x);
+    	Ensemble  es2 = this.Find(y);
+    	if (es1 != null && es2 != null) {
+			if (es1.representant != es2.representant)
+				es1.getListeChaineeS().concatener(es2.getListeChaineeS());
+		 		//parent.remove(es2);
+		 		
+			}
+   
     }
+    
 
+
+	public void afficheElement() {
+		for (Ensemble ensemble : parent) 
+			System.out.println(ensemble.toString());	
+	}
+    
+    
+    
                             
-
-    //public int size() { // number of groups
-        //int ans = 0;
-        //for (int i = 0; i < parent.length(); ++ i) {
-          //  if (i == parent[i]) ans ++;
-        //}
-        //return ans;
-    //}  
 }

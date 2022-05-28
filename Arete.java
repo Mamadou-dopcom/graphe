@@ -26,9 +26,6 @@ class Arete {
 	extremites = new Sommet[2];
 	extremites[0] = s1;
 	extremites[1] = s2;
-	// On inscrit l'ar�te dans les listes d'incidence de ses extr�mit�s
-	s1.ajouteArete(this);
-	s2.ajouteArete(this);
 	poids = p;
  }
  // Donne l'autre extr�mit�
@@ -60,12 +57,14 @@ public String toString() {
 	return "Arete: [[" + extremites[0].getNom() + ","+extremites[1].getNom()+ "] poids=" + poids + "]";
 }
 
-//public boolean estArete(Sommet s1, Sommet s2) {
-	//if (!(admetExtremite(s1) && admetExtremite(s2)) ||  );
-		
-	//}
-
 //public boolean verif()
-
+public int equales(Arete a) {
+	if( this.extremites[0].getNom()==a.extremites[0].getNom() && this.extremites[1].getNom()==a.extremites[1].getNom()
+			|| a.extremites[0].getNom()==a.extremites[1].getNom())
+		return 0;
+	else if (this.extremites[0].getNom()==a.extremites[1].getNom() && (this.extremites[1].getNom()==a.extremites[0].getNom())) 
+		return 1;
+	return 2;
+	}
 
 }
